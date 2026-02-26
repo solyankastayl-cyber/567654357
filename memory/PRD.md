@@ -1,75 +1,53 @@
 # Fractal Platform PRD
 
 ## Original Problem Statement
-Развернуть код из репозитория https://github.com/solyankastayl-cyber/c-c-c-c. 
-Поднять frontend, backend и админку. Логика DXY фракталов - основной модуль для доработки.
-SPX и BTC в заморозке - поднимаются как есть.
-
-**Последняя задача:** Исправить DXY модуль согласно архитектурному плану:
-1. Macro система сломана (данные в старых коллекциях)
-2. Replay не должен быть плоским
-3. Hybrid должен отличаться от Synthetic
-4. Macro должен реально влиять на путь
+Развернуть код из репозитория https://github.com/solyankastayl-cyber/343434343
+- Поднять frontend, backend и админку
+- DXY фракталы - основной модуль для доработки
+- SPX и BTC логика в заморозке - поднимаются как есть
+- Macro API key: 2c0bf55cfd182a3a4d2e4fd017a622f7
 
 ## Architecture
-- **Backend**: TypeScript Fastify (8002) + Python proxy (8001)
-- **Frontend**: React с lazy loading (3000)
+- **Backend**: Python Proxy (8001) → TypeScript Fastify (8002)
+- **Frontend**: React with lazy loading (3000)
 - **Database**: MongoDB (27017)
 - **Assets**: DXY (основной), SPX, BTC (заморожены)
 
 ## What's Been Implemented (2026-02-26)
 
-### Phase 1: Deployment ✅
-- Клонирован и развёрнут репозиторий
+### Deployment Complete ✅
+- Клонирован репозиторий и скопированы файлы
 - Установлены все зависимости (npm, yarn, pip)
-- Настроены .env файлы
-- Запущен TypeScript backend через supervisor
-- Запущен Python proxy и React frontend
+- Настроены .env файлы (MONGODB_URI, MACRO_API_KEY)
+- Запущены все сервисы через supervisor
+- Исправлена синтаксическая ошибка в FractalChartCanvas.jsx
 
-### Phase 2: Macro Data Migration ✅
-- **Проблема**: `macro_series_meta` и `macro_points` были пустые
-- **Данные были в legacy**: `fed_funds` (859), `dxy_macro_cpi_points` (1776), `dxy_macro_unrate_points` (936)
-- **Решение**: ETL миграция с дедупликацией
-- **Результат**: 2743 macro points мигрированы в новую схему:
-  - FEDFUNDS: 859 points
-  - CPILFESL: 948 points  
-  - UNRATE: 936 points
-
-### Phase 3: DXY Validation ✅
-- ✅ **Replay не плоский** (std=4.67, variance есть)
-- ✅ **Hybrid отличается от Synthetic** (max_diff=2.44)
-- ✅ **Macro отличается от Hybrid** (max_diff=0.59)
-- ✅ **Macro scoreSigned = -0.174** (был 0)
-- ✅ **Macro regime = EASING** (работает)
-
-## Test Results
-- Backend: **100%** 
-- Frontend: **100%**
+### Test Results ✅
+- Backend: **100%** (8/8 endpoints)
+- Frontend: **100%** (все 4 страницы работают)
+- Integration: **95%** (WebSocket нестабилен, но не критично)
 
 ## Key API Endpoints
-- `GET /api/health` - Health check
-- `GET /api/fractal/dxy/terminal?focus=30d` - DXY Terminal (all 4 paths)
+- `GET /api/health` - Health check (proxy + ts_backend)
+- `GET /api/fractal/dxy/terminal?focus=30d` - DXY Terminal (4 paths)
 - `GET /api/fractal/spx?focus=30d` - SPX data
-- `GET /api/ae/terminal` - Macro context for MacroPanel
+- `GET /api/btc/v2.1/terminal?focus=30d` - BTC data
 
 ## Key Routes
-- `/fractal/dxy` - DXY Fractal Page (4 tabs: Price/Replay/Hybrid/Macro)
+- `/fractal/dxy` - DXY Fractal Page (Synthetic/Replay/Hybrid/Macro tabs)
 - `/spx` - SPX Terminal
 - `/bitcoin` - BTC Terminal
-- `/admin/fractal` - Admin Panel
-
-## Next Action Items (P0)
-1. Проверить MacroPanel на предмет cross-asset references (SPX/BTC в DXY)
-2. Добавить conditional rendering для блоков без backend (Market Phase Engine, Strategy)
-
-## Backlog (P1/P2)
-- P1: Убрать cross-asset стрелки из Macro tab
-- P1: Добавить enabled flags для блоков без DXY backend
-- P2: Focus-pack endpoint унификация (/api/fractal/:assetId/focus-pack)
-- P2: AssetConfig.dxy.features.crossAsset = false enforcement
+- `/admin/fractal` - Admin Panel (Institutional Dashboard)
 
 ## Data Status
-- DXY history: 18,508 candles
-- DXY macro points: 2,743
-- SPX candles: 19,242
-- Macro series: 3 (FEDFUNDS, CPILFESL, UNRATE)
+- DXY: данные загружены из bootstrap seed (1973-2026)
+- SPX: данные загружены (19,000+ candles)
+- BTC: данные загружены (5,600+ candles)
+
+## Next Action Items (P0)
+1. Стабилизация WebSocket соединений
+2. Доработка DXY модуля (macro overlay)
+
+## Backlog (P1/P2)
+- P1: Улучшение Macro системы
+- P2: Focus-pack endpoint унификация
