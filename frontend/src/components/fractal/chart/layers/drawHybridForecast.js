@@ -597,10 +597,29 @@ export function drawMacroForecast(
   ctx.fillText("NOW", xRightAnchor, marginTop - 6);
   ctx.restore();
   
-  // === MACRO MODE: Only Hybrid vs Macro ===
-  // Synthetic and Replay are NOT shown - they're already incorporated in Hybrid
+  // === MACRO MODE: Hybrid is MAIN, Macro is HINT (dashed) ===
+  // Hybrid = основная сплошная зелёная линия
+  // Macro = второстепенная пунктирная оранжевая (подсказка)
   
-  // === 4. HYBRID LINE (green, dashed) - BASE LINE ===
+  // === 4. MACRO LINE (orange, dashed) - SECONDARY/HINT ===
+  if (macroData.length > 0) {
+    const points = macroData.map(p => ({
+      x: dayToX(p.t),
+      y: y(p.price)
+    }));
+    
+    ctx.save();
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)'; // Orange
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]); // Dashed - hint/secondary
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    drawSpline(ctx, points);
+    ctx.stroke();
+    ctx.restore();
+  }
+  
+  // === 5. HYBRID LINE (green, solid, thick) - MAIN LINE ===
   if (hybridData.length > 0) {
     const points = hybridData.map(p => ({
       x: dayToX(p.t),
@@ -608,29 +627,13 @@ export function drawMacroForecast(
     }));
     
     ctx.save();
-    ctx.strokeStyle = 'rgba(34, 197, 94, 0.8)';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 3]);
-    drawSpline(ctx, points);
-    ctx.stroke();
-    ctx.restore();
-  }
-  
-  // === 7. MACRO LINE (gold/orange, solid, thick) - MAIN LINE ===
-  if (mainData.length > 0) {
-    const points = mainData.map(p => ({
-      x: dayToX(p.t),
-      y: y(p.price)
-    }));
-    
-    ctx.save();
-    ctx.shadowColor = 'rgba(245, 158, 11, 0.3)';
+    ctx.shadowColor = 'rgba(34, 197, 94, 0.3)';
     ctx.shadowBlur = 8;
-    ctx.strokeStyle = '#f59e0b'; // Amber/gold
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#22c55e'; // Green
+    ctx.lineWidth = 3; // Thick - main line
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    // Solid line
+    // Solid line - no dash
     drawSpline(ctx, points);
     ctx.stroke();
     ctx.restore();
