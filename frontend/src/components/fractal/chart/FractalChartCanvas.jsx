@@ -259,8 +259,10 @@ function ForecastTooltip({ day, forecastData, currentPrice, horizonDays, symbol 
                 </span>
               </div>
             )}
-          </div>
-        </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
