@@ -391,6 +391,8 @@ export function drawHybridForecast(
   const unifiedMarkers = unifiedPath?.markers || {};
   const markerKeys = Object.keys(unifiedMarkers).filter(k => {
     const m = unifiedMarkers[k];
+    // Skip 7d marker for 365d horizon (too cluttered)
+    if (N >= 365 && k === '7d') return false;
     return m && m.t > 0 && m.t < N;
   });
   
@@ -399,8 +401,17 @@ export function drawHybridForecast(
   console.log('[drawHybridForecast] N:', N);
   
   const legacyMarkers = markers.length > 0 
-    ? markers.filter(m => (m.day || m.dayIndex + 1) < N)
-    : forecast?.markers?.filter(m => (m.day || m.dayIndex + 1) < N) || [];
+    ? markers.filter(m => {
+        const day = m.day || m.dayIndex + 1;
+        // Skip 7d marker for 365d horizon
+        if (N >= 365 && day === 7) return false;
+        return day < N;
+      })
+    : (forecast?.markers?.filter(m => {
+        const day = m.day || m.dayIndex + 1;
+        if (N >= 365 && day === 7) return false;
+        return day < N;
+      }) || []);
   
   if (markerKeys.length > 0) {
     markerKeys.forEach(key => {
