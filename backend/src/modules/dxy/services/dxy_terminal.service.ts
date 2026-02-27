@@ -380,19 +380,33 @@ export async function buildDxyTerminalPack(
   
   if (hybridPath.length > 0) {
     if (macroPack && macroPack.confidence > 0) {
-      // Macro adjustment factor based on:
-      // - scoreSigned: -1 to +1 (negative = USD weak, positive = USD strong)
-      // - confidenceMultiplier: 0.6 to 1.15
+      // Macro adjustment formula:
+      // adjustment = scoreSigned × BASE_SENSITIVITY × regimeBoost × confidenceMultiplier
       const macroScoreSigned = macroPack.scoreSigned || 0;
       const macroMultiplier = macroPack.overlay?.confidenceMultiplier || 1.0;
+      const dominantRegime = macroPack.regime?.label || 'NEUTRAL';
+      
+      // Base sensitivity: increased from 0.03 to 0.05 for more visible impact
+      const BASE_MACRO_SENSITIVITY = 0.05;
+      
+      // Regime-specific boost factors
+      const regimeBoost: Record<string, number> = {
+        'EASING': 1.0,
+        'TIGHTENING': 1.2,
+        'STRESS': 1.5,
+        'PIVOT': 1.3,
+        'NEUTRAL': 0.8,
+        'NEUTRAL_MIXED': 0.8,
+      };
+      
+      const boost = regimeBoost[dominantRegime] || 1.0;
       
       // For DXY: positive macro score → stronger dollar → higher DXY
-      // Adjustment: apply small bias based on macro regime
-      // Max adjustment: ±3% at extreme macro scores
-      macroAdjustmentFactor = macroScoreSigned * 0.03 * macroMultiplier;
-      macroDescription = `Hybrid + Macro (${macroPack.regime?.label || 'NEUTRAL'})`;
+      // Max adjustment: ~7.5% at extreme scores with STRESS regime
+      macroAdjustmentFactor = macroScoreSigned * BASE_MACRO_SENSITIVITY * boost * macroMultiplier;
+      macroDescription = `Hybrid + Macro (${dominantRegime}, boost=${boost.toFixed(1)}x)`;
       
-      console.log(`[DXY Terminal] Macro applied: scoreSigned=${macroScoreSigned}, multiplier=${macroMultiplier}, adjustment=${macroAdjustmentFactor}`);
+      console.log(`[DXY Terminal] Macro applied: scoreSigned=${macroScoreSigned.toFixed(4)}, regime=${dominantRegime}, boost=${boost}, multiplier=${macroMultiplier.toFixed(2)}, adjustment=${(macroAdjustmentFactor * 100).toFixed(3)}%`);
     } else {
       console.log('[DXY Terminal] Macro skipped: no macroPack or confidence=0');
     }
