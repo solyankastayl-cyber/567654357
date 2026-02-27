@@ -687,65 +687,65 @@ export function drawMacroForecast(
   // === 9. END MARKERS ===
   const endX = dayToX(N);
   
-  // Hybrid end marker (main, largest) - GREEN
-  if (hybridData.length > 0) {
-    const lastHybrid = hybridData[hybridData.length - 1];
-    const lastHybridY = y(lastHybrid.price);
-    ctx.save();
-    ctx.fillStyle = '#22c55e';
-    ctx.beginPath();
-    ctx.arc(endX, lastHybridY, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(endX, lastHybridY, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-  
-  // Macro end marker (secondary, smaller) - ORANGE
+  // Macro end marker (main, largest) - ORANGE
   if (macroData.length > 0) {
     const lastMacro = macroData[macroData.length - 1];
     const lastMacroY = y(lastMacro.price);
     ctx.save();
-    ctx.fillStyle = 'rgba(245, 158, 11, 0.8)';
+    ctx.fillStyle = '#f59e0b';
     ctx.beginPath();
-    ctx.arc(endX, lastMacroY, 4, 0, Math.PI * 2);
+    ctx.arc(endX, lastMacroY, 6, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#fff';
     ctx.beginPath();
-    ctx.arc(endX, lastMacroY, 2, 0, Math.PI * 2);
+    ctx.arc(endX, lastMacroY, 3, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
   
-  // === 10. LEGEND (Hybrid first as main, Macro as hint) ===
+  // Hybrid end marker (secondary, smaller) - GREEN
+  if (hybridData.length > 0) {
+    const lastHybrid = hybridData[hybridData.length - 1];
+    const lastHybridY = y(lastHybrid.price);
+    ctx.save();
+    ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
+    ctx.beginPath();
+    ctx.arc(endX, lastHybridY, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(endX, lastHybridY, 2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  
+  // === 10. LEGEND (Macro first as main, Hybrid as hint) ===
   const legendX = xRightAnchor + 12;
   const legendY = marginTop + 20;
   
   ctx.save();
   
-  // HYBRID legend (main line) - shown first
-  if (hybridData.length > 0) {
-    ctx.fillStyle = '#22c55e';
+  // MACRO legend (main line) - shown first
+  if (macroData.length > 0) {
+    ctx.fillStyle = '#f59e0b';
     ctx.beginPath();
     ctx.arc(legendX, legendY, 5, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#333';
     ctx.font = "bold 11px system-ui";
     ctx.textAlign = 'left';
-    ctx.fillText('Hybrid', legendX + 12, legendY + 4);
+    ctx.fillText('Macro', legendX + 12, legendY + 4);
   }
   
-  // MACRO legend (secondary/hint)
-  if (macroData.length > 0) {
-    ctx.fillStyle = 'rgba(245, 158, 11, 0.8)';
+  // HYBRID legend (secondary/hint)
+  if (hybridData.length > 0) {
+    ctx.fillStyle = 'rgba(34, 197, 94, 0.8)';
     ctx.beginPath();
     ctx.arc(legendX, legendY + 18, 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#444';
     ctx.font = "10px system-ui";
-    ctx.fillText('Macro', legendX + 12, legendY + 22);
+    ctx.fillText('Hybrid', legendX + 12, legendY + 22);
   }
   
   ctx.restore();
