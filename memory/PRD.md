@@ -80,3 +80,36 @@ New layout following blueprint:
 - P1: WebSocket stabilization
 - P1: Regime timeline mini-chart
 - P2: Scenario influence map
+
+## Update 2026-02-27 v2
+
+### Macro Formula Calibration ✅
+- Base sensitivity: 0.03 → **0.05** (+67%)
+- Added regime-specific boost factors:
+  - EASING: 1.0x
+  - TIGHTENING: 1.2x
+  - STRESS: 1.5x
+  - PIVOT: 1.3x
+  - NEUTRAL: 0.8x
+
+### Current Results:
+```
+Macro = Hybrid + (scoreSigned × 0.05 × regimeBoost × confidenceMultiplier)
+
+Example (EASING regime):
+scoreSigned = -0.062
+boost = 1.0
+multiplier = 0.86
+adjustment = -0.062 × 0.05 × 1.0 × 0.86 = -0.27%
+```
+
+### Visible Differences:
+- 30D: Hybrid +0.09% → Macro -0.18% (diff -0.27%)
+- 90D: Hybrid -5.77% → Macro -6.04% (diff -0.27%)
+- 180D: Hybrid -8.02% → Macro -8.29% (diff -0.27%)
+- 365D: Hybrid -11.47% → Macro -11.74% (diff -0.27%)
+
+### Mode Button Fix
+- Added console.log for debugging Macro tab click
+- State update confirmed working (onClick fires correctly)
+- Visual update may require page reload or React reconciliation check
