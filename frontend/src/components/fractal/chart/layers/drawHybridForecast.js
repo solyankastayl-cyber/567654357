@@ -750,8 +750,8 @@ export function drawMacroForecast(
   
   ctx.restore();
   
-  // === 11. FORECAST SUMMARY (based on Hybrid - main line) ===
-  const dataForReturn = hybridData.length > 0 ? hybridData : macroData;
+  // === 11. FORECAST SUMMARY (based on Macro - main line) ===
+  const dataForReturn = macroData.length > 0 ? macroData : hybridData;
   const startPrice = dataForReturn[0]?.price || anchorPrice;
   const endPrice = dataForReturn[dataForReturn.length - 1]?.price || startPrice;
   const expectedReturn = ((endPrice - startPrice) / startPrice) * 100;
