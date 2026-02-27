@@ -636,7 +636,7 @@ export function drawMacroForecast(
     ctx.restore();
   }
   
-  // === 8. DAY MARKERS on HYBRID path (main line) ===
+  // === 8. DAY MARKERS on MACRO path (main line) ===
   const allPossibleMarkers = [
     { day: 7, horizon: '7d' },
     { day: 14, horizon: '14d' },
@@ -651,8 +651,8 @@ export function drawMacroForecast(
     .filter(m => m.day <= N)
     .filter(m => !(N >= 365 && m.day === 7)); // Skip 7d on 365d timeframe
   
-  // Use HYBRID path for markers (it's the main line now)
-  const pathForMarkers = hybridData.length > 0 ? hybridData : macroData;
+  // Use MACRO path for markers (it's the main line now)
+  const pathForMarkers = macroData.length > 0 ? macroData : hybridData;
   
   displayMarkers.forEach((marker, index) => {
     const dayIndex = Math.min(marker.day - 1, pathForMarkers.length - 1);
@@ -662,9 +662,9 @@ export function drawMacroForecast(
     const px = dayToX(marker.day);
     const py = y(point.price);
     
-    // Circle marker (green for hybrid - main line)
+    // Circle marker (orange for macro - main line)
     ctx.save();
-    ctx.fillStyle = '#22c55e';
+    ctx.fillStyle = '#f59e0b';
     ctx.beginPath();
     ctx.arc(px, py, 4, 0, Math.PI * 2);
     ctx.fill();
