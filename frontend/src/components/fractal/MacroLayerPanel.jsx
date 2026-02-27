@@ -38,10 +38,11 @@ const MacroLayerPanel = ({ focus, focusPack }) => {
     fetchData();
   }, [focus]);
 
-  // Extract data
+  // Extract data from focusPack
   const regime = aeState?.regime || {};
-  const macro = focusPack?.macro || {};
-  const hybrid = focusPack?.hybrid || {};
+  const unifiedPath = focusPack?.unifiedPath || {};
+  const hybridPath = unifiedPath.hybridPath || [];
+  const macroPath = unifiedPath.macroPath || [];
   
   // Regime state
   const regimeName = (regime.regime || 'NEUTRAL').replace(/_/g, ' ');
@@ -49,9 +50,13 @@ const MacroLayerPanel = ({ focus, focusPack }) => {
   const regimeReasons = regime.reasons || [];
   
   // Macro impact
-  const hybridReturn = hybrid?.path?.[hybrid.path.length - 1]?.pct || 0;
-  const macroBias = macro?.adjustment?.maxAdjustment || 0;
-  const macroReturn = macro?.path?.[macro.path.length - 1]?.pct || hybridReturn;
+  const hybridReturn = hybridPath.length > 0 
+    ? (hybridPath[hybridPath.length - 1]?.pct || 0)
+    : 0;
+  const macroBias = unifiedPath.macroAdjustment?.maxAdjustment || 0;
+  const macroReturn = macroPath.length > 0 
+    ? (macroPath[macroPath.length - 1]?.pct || 0)
+    : hybridReturn;
   const impactStrength = Math.abs(macroBias) > 0.01 ? 'Strong' 
     : Math.abs(macroBias) > 0.005 ? 'Moderate' 
     : Math.abs(macroBias) > 0 ? 'Weak' 
