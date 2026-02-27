@@ -552,6 +552,7 @@ export function drawMacroForecast(
   const macroAdjustment = unifiedPath.macroAdjustment;
   
   console.log('[drawMacroForecast] macroPath:', macroData.length);
+  console.log('[drawMacroForecast] hybridPath:', hybridData.length);
   console.log('[drawMacroForecast] macroAdjustment:', macroAdjustment);
   
   // Forecast zone width
