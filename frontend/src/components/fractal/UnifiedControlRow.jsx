@@ -261,6 +261,16 @@ function StatusBlock({ signal, confidence, marketMode, risk }) {
 function ModeTabs({ mode, onChange, loading, asset = 'BTC' }) {
   const modes = getModesForAsset(asset);
   
+  const handleModeClick = (key) => {
+    console.log('[ModeTabs] Clicked:', key, 'Current mode:', mode);
+    if (onChange) {
+      onChange(key);
+      console.log('[ModeTabs] Called onChange with:', key);
+    } else {
+      console.log('[ModeTabs] onChange is undefined!');
+    }
+  };
+  
   return (
     <div className="flex gap-1.5 bg-slate-100 p-1.5 rounded-xl">
       {modes.map(m => {
@@ -268,7 +278,7 @@ function ModeTabs({ mode, onChange, loading, asset = 'BTC' }) {
         return (
           <button
             key={m.key}
-            onClick={() => onChange?.(m.key)}
+            onClick={() => handleModeClick(m.key)}
             disabled={loading}
             title={m.description}
             className={`
