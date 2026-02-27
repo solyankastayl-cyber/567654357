@@ -1,11 +1,16 @@
 /**
- * FRACTAL RESEARCH TERMINAL v6
- * UNIFIED CONTROL ROW — Compact single-row layout
+ * FRACTAL RESEARCH TERMINAL v7
+ * ARCHITECTURAL REBUILD — DXY Blueprint
  * 
  * Structure:
  * [ Header ]
  * [ Control Row: Status | Mode | Horizon ]
- * [ Chart (Full Width) ]
+ * [ FORECAST CORE: Chart 70% | Summary 30% ]
+ * [ FRACTAL ENGINE BREAKDOWN ]
+ * [ MACRO LAYER ]
+ * [ OUTCOMES + RISK ]
+ * [ FRACTAL ANALYSIS + MATCHES ]
+ * [ MARKET STRUCTURE ]
  */
 
 import React, { useState, useEffect } from 'react';
@@ -27,6 +32,10 @@ import { AsOfDatePicker } from '../components/fractal/AsOfDatePicker';
 import { ScenarioBox } from '../components/fractal/ScenarioBox';
 import { RiskBox } from '../components/fractal/RiskBox';
 import MacroPanel from '../components/fractal/MacroPanel';
+import ForecastSummaryPanel from '../components/fractal/ForecastSummaryPanel';
+import FractalEngineBreakdown from '../components/fractal/FractalEngineBreakdown';
+import MacroLayerPanel from '../components/fractal/MacroLayerPanel';
+import OutcomesRiskPanel from '../components/fractal/OutcomesRiskPanel';
 import { useFocusPack, HORIZONS, getTierColor, getTierLabel } from '../hooks/useFocusPack';
 import { useConsensusPulse } from '../hooks/useConsensusPulse';
 
