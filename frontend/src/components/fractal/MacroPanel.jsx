@@ -320,7 +320,7 @@ function MacroPanel({ focus = '30d', focusPack = null }) {
               Regime
             </span>
             <span className={`regimeTag ${getRegimeClass(regime?.regime)}`}>
-              {regime?.regime || 'N/A'}
+              {(regime?.regime || 'N/A').replace(/_/g, ' ')}
             </span>
             <span style={{ color: '#6b7280', fontSize: '13px' }}>
               Confidence: {((regime?.confidence || 0) * 100).toFixed(0)}%
